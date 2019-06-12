@@ -34,27 +34,23 @@ func merge(a, b <-chan int) <-chan int {
 	var result = make(chan int)
 	go func() {
 		var aClosed, bClosed bool
+		defer close(result)
 		for !aClosed || !bClosed {
 			select {
 			case v, ok := <-a:
-				log.Printf("a ok: %+v, aClosed: %+v, bClosed: %+v\n", ok, aClosed, bClosed)
 				if !ok {
 					aClosed = true
-					a = nil
-				} else {
-					result <- v
+					continue
 				}
+				result <- v
 			case v, ok := <-b:
-				log.Printf("a ok: %+v, aClosed: %+v, bClosed: %+v\n", ok, aClosed, bClosed)
 				if !ok {
 					bClosed = true
-					b = nil
-				} else {
-					result <- v
+					continue
 				}
+				result <- v
 			}
 		}
-		close(result)
 	}()
 	return result
 }
