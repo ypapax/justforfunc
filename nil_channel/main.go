@@ -6,6 +6,8 @@ import (
 	"sync"
 )
 
+// https://youtu.be/t9bEg2A4jsw?t=54
+
 func main() {
 	log.SetFlags(log.LstdFlags | log.Llongfile)
 	a := asChan(1, 3, 5, 7)
