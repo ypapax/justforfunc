@@ -33,19 +33,18 @@ func asChan(vs ...int) <-chan int {
 func merge(a, b <-chan int) <-chan int {
 	var result = make(chan int)
 	go func() {
-		var aClosed, bClosed bool
 		defer close(result)
-		for !aClosed || !bClosed {
+		for a != nil || b != nil {
 			select {
 			case v, ok := <-a:
 				if !ok {
-					aClosed = true
+					a = nil
 					continue
 				}
 				result <- v
 			case v, ok := <-b:
 				if !ok {
-					bClosed = true
+					b = nil
 					continue
 				}
 				result <- v
