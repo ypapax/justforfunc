@@ -33,38 +33,28 @@ func asChan(vs ...int) <-chan int {
 func merge(a, b <-chan int) <-chan int {
 	var result = make(chan int)
 	go func() {
-		var aClosed, bClosed, resultClosed bool
-		for {
+		var aClosed, bClosed bool
+		for !aClosed || !bClosed {
 			select {
 			case v, ok := <-a:
+				log.Printf("a ok: %+v, aClosed: %+v, bClosed: %+v\n", ok, aClosed, bClosed)
 				if !ok {
-					// log.Printf("a ok: %+v, aClosed: %+v, bClosed: %+v\n", ok, aClosed, bClosed)
 					aClosed = true
-					if aClosed && bClosed && !resultClosed {
-						log.Println("closing result")
-						close(result)
-						resultClosed = true
-						break
-					}
-					continue
+					a = nil
+				} else {
+					result <- v
 				}
-				result <- v
 			case v, ok := <-b:
+				log.Printf("a ok: %+v, aClosed: %+v, bClosed: %+v\n", ok, aClosed, bClosed)
 				if !ok {
-					// log.Printf("a ok: %+v, aClosed: %+v, bClosed: %+v\n", ok, aClosed, bClosed)
 					bClosed = true
-					if aClosed && bClosed && !resultClosed {
-						log.Println("closing result")
-						close(result)
-						resultClosed = true
-						break
-					}
-					continue
+					b = nil
+				} else {
+					result <- v
 				}
-				result <- v
 			}
 		}
-
+		close(result)
 	}()
 	return result
 }
