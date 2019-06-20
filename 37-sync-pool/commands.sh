@@ -5,4 +5,8 @@ t(){
 	go test -v
 }
 
+b(){
+	go test -v -bench=.
+}
+
 $@

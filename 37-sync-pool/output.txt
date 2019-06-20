@@ -1,0 +1,4 @@
+Without sync pool:
+BenchmarkHandle-12    	   10000	    203937 ns/op
+PASS
+ok  	github.com/ypapax/justforfunc/37-sync-pool	2.269s

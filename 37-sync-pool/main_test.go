@@ -24,7 +24,7 @@ func TestHandle(t *testing.T) {
 	if !as.NoError(err) {
 		return
 	}
-	req, err := http.NewRequest("POST", "http://localhost:"+port, bytes.NewReader(pl))
+	req, err := http.NewRequest(http.MethodPost, "http://localhost:"+port, bytes.NewReader(pl))
 	if !as.NoError(err) {
 		return
 	}
@@ -45,5 +45,25 @@ func TestHandle(t *testing.T) {
 	if exp := "pull request id: 191568743"; !as.Equal(exp, string(b)) {
 		return
 	}
+}
 
+func BenchmarkHandle(b *testing.B) {
+	b.StopTimer()
+	as := assert.New(b)
+
+	pl, err := ioutil.ReadFile("./payload.json")
+	if !as.NoError(err) {
+		return
+	}
+
+	for i := 0; i <= b.N; i++ {
+		req, err := http.NewRequest(http.MethodPost, "http://localhost:"+port, bytes.NewReader(pl))
+		if !as.NoError(err) {
+			return
+		}
+		res := httptest.NewRecorder()
+		b.StartTimer()
+		handle(res, req)
+		b.StopTimer()
+	}
 }
