@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"sync"
 )
 
 const port = "8081"
@@ -19,12 +20,19 @@ func main() {
 	}
 }
 
+var prPool = sync.Pool{
+	New: func() interface{} {
+		return new(pullRequest)
+	},
+}
+
 type pullRequest struct {
 	PullRequest struct{ ID int } `json:"pull_request"`
 }
 
 func handle(w http.ResponseWriter, r *http.Request) {
-	var data pullRequest
+	var data = prPool.New().(*pullRequest)
+	defer prPool.Put(data)
 	if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
 		log.Println("err", err)
 		http.Error(w, "internal server error ise8988", http.StatusInternalServerError)

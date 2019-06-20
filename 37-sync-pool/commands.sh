@@ -6,7 +6,7 @@ t(){
 }
 
 b(){
-	go test -v -bench=.
+	go test -v -benchmem -bench=.
 }
 
 $@
