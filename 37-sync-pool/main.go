@@ -32,6 +32,7 @@ type pullRequest struct {
 
 func handle(w http.ResponseWriter, r *http.Request) {
 	var data = prPool.New().(*pullRequest)
+	data.PullRequest.ID = 0
 	defer prPool.Put(data)
 	if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
 		log.Println("err", err)

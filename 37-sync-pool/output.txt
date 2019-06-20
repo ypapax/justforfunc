@@ -3,6 +3,14 @@ BenchmarkHandle-12    	   10000	    179182 ns/op	   65061 B/op	      26 allocs/o
 PASS
 ok  	github.com/ypapax/justforfunc/37-sync-pool	2.976s
 
+
+with sync pool:
 BenchmarkHandle-12    	   10000	    209684 ns/op	   65131 B/op	      27 allocs/op
 PASS
 ok  	github.com/ypapax/justforfunc/37-sync-pool	2.355s
+
+
+with sync pool and setting id to 0:
+BenchmarkHandle-12    	   10000	    173543 ns/op	   65131 B/op	      27 allocs/op
+PASS
+ok  	github.com/ypapax/justforfunc/37-sync-pool	1.943s
